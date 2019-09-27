@@ -29,4 +29,24 @@ const fetchMyIP = function(callback) {
   });
 
 };
-module.exports = { fetchMyIP };
+
+const fetchCoordsByIp = function(ip, callback) {
+  request(`https://ipvigilante.com/json/${ip}`, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+    }
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching coordinates with IP. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    } else {
+      const { latitude, longitude } = JSON.parse(body).data;
+      callback(null, { latitude, longitude });
+    }
+  });
+};
+
+
+
+
+module.exports = { fetchMyIP, fetchCoordsByIp };
